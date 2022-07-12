@@ -1,0 +1,130 @@
+#!/bin/bash
+##ollyk bash shenanigans
+#20220711
+#interactive shell check
+[ -z "$PS1" ] && return
+#enable autocomplete
+if [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+fi
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+HISTSIZE=10000
+HISTFILESIZE=20000
+HISTTIMEFORMAT="%F %T "
+HISTCONTROL=ignoredups
+shopt -s autocd
+shopt -s cdspell
+shopt -s dirspell
+shopt -s checkwinsize
+
+##set -o vi
+
+alias sysdstat='sudo systemctl status'
+alias sysdstart='sudo systemctl start'
+alias sysdstop='sudo systemctl stop'
+
+#debian to rhel package installer
+alias apt="yum"
+
+
+# set PATH so it includes user bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+## change prompt 
+live="\[\e[0;35m\]\u\[\e[0m\]-\[\e[0;1;92m\]LIVE\[\e[0m\]:\[\e[0;96m\]\w\[\e[0;97m\]\$\[\e[0m\] "
+standby="\[\e[0;35m\]\u\[\e[0m\]-\[\e[0;38;5;214m\]STANDBY\[\e[0m\]:\[\e[0;96m\]\w\[\e[0;97m\]\$\[\e[0m\] "
+
+if [[ "$(sys | grep shadow_tx | grep -v grep)" ]]; then
+    PS1=$live
+elif [[ "$(sys | grep -q shadow_rx | grep -v grep)" ]]; then
+    PS1=$standby
+fi
+
+# set PATH so it include support
+#if [ -d "$HOME/support/api" ] ; then
+#    PATH="$HOME/support/api:$PATH"
+#fi
+
+
+alias vi=vim
+alias svi='sudo vi'
+
+# Stop after sending count ECHO_REQUEST packets #
+alias ping='ping -c 5'
+# Do not wait interval 1 second, go fast #
+alias fastping='ping -c 100 -s.2'
+
+#dirs
+alias ls='ls -al --color -h --group-directories-first'
+alias ..="cd .."
+alias ...="cd .. && cd .."
+
+#show deletes
+alias rmdir="rm -rfvI"
+alias rm="rm -vI"
+
+
+# exports
+export GREP_OPTIONS='--color=always'
+export EDITOR=/usr/bin/vim
+
+# disk
+alias du='du -h'
+alias df='df -h'
+
+# less w/ colours
+alias less="less -r"
+
+#ports
+alias ports='netstat -natp'
+
+#count files
+alias countfiles='find . -type f | wc -l'
+
+alias locate="locate -i"
+alias man="man -a"
+alias ps="ps f -wef"
+
+
+#make dir and cd into it
+mkcd ()
+{
+  mkdir -pv -- "$1" && cd -P -- "$1"
+}
+
+cl() {
+    DIR="$*";
+        # if no DIR given, go home
+        if [ $# -lt 1 ]; then
+                DIR=$HOME;
+    fi;
+    builtin cd "${DIR}" && \
+    # use your preferred ls command
+        ls -al --color=always --group-directories-first
+}
+
+
+hg() {
+    history | grep "$1";
+}
+
+##### dumb ones 
+alias top10="history | awk '{cmd[$2]++} END {for(elem in cmd) {print cmd[elem] " " elem}}' | sort -n -r | head -10"
+
+
+########colorful
+# Normal Colors
+Black='\e[0;30m'        # Black
+Red='\e[0;31m'          # Red
+Green='\e[0;32m'        # Green
+Yellow='\e[0;33m'       # Yellow
+Blue='\e[0;34m'         # Blue
+Purple='\e[0;35m'       # Purple
+Cyan='\e[0;36m'         # Cyan
+White='\e[0;37m'        # White
+
+################ typos
+alias sl="ls -al --color -h --group-directories-first"
