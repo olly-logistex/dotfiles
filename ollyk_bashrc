@@ -112,7 +112,7 @@ hg() {
 }
 
 ##### dumb ones 
-alias top10="history | awk '{cmd[$2]++} END {for(elem in cmd) {print cmd[elem] " " elem}}' | sort -n -r | head -10"
+#alias top10="history | awk '{cmd[$2]++} END {for(elem in cmd) {print cmd[elem] " " elem}}' | sort -n -r | head -10"
 
 
 ########colorful
